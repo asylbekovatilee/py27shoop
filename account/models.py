@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db) # сохряняем юзера в бд
         return user
 
-    def create_superuser(self,email, password, phone, **kwargs):
+    def create_superuser(self, email, password, phone, **kwargs):
         if not email:
             raise ValueError("Email is required")
         email = self.normalize_email(email) # порядок почты normalize email
