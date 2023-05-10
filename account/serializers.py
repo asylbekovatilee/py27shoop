@@ -7,7 +7,7 @@ class RegisterUserSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'bio', 'password', 'password_confirm')
+        fields = ('email', 'phone', 'password', 'password_confirm')
 
     def validate(self, attrs):
         # ATTRS -> OrderedDict([('email', 'admin1@gmail.com'), ('phone', '996700071102'), ('password', '12345'), ('password_confirm', '12345')])
@@ -15,8 +15,7 @@ class RegisterUserSerializers(serializers.ModelSerializer):
         pass2 = attrs.pop("password_confirm")
         # ATTRS AFTER POP -> # ATTRS -> OrderedDict([('email', 'admin1@gmail.com'), ('phone', '996700071102'), ('password', '12345')])
         if pass1 != pass2:
-            raise serializers.ValidationError
-            ("Passwords do not match")
+            raise serializers.ValidationError("Passwords do not match")
         return attrs
     
     def validate_email(self, email):
