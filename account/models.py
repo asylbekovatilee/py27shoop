@@ -1,9 +1,7 @@
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from .utils import send_activation_code
-
 
 
 class UserManager(BaseUserManager):
@@ -18,6 +16,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)  # хеширование пароля
         user.create_activation_code()  # генерируем ак.код
         send_activation_code(user.email, user.activation_code) 
+        Billing.objects.create(user=user)
         user.save(using=self._db)  # созраняем юзера в бд
         return user
 
@@ -46,3 +45,29 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['phone']
 
     objects = UserManager() 
+
+
+    def create_activation_code(self):
+        from django.utils.crypto import get_random_string
+        code = get_random_string(lenght=8)
+        self.activation_code = code
+        self.save
+
+class Billing(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='billing')
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def top_up(self, amount):
+        """пополнение счета если транзакция прошла успешно вернется True"""
+        if amount > 0:
+            self.amount += amount
+            self.save()
+            return True
+        return False
+    
+    def withdraw(self, amount):
+        """снятие денег со счета если  транзакция прошла успешно вернется True"""
+        if self.amount >= amount:
+            self.amount -= amount
+            self.save()
+        return False
