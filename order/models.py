@@ -1,12 +1,11 @@
 from django.db import models
-from account.models import Product
-from .models import Product
+from account.models import User
+from main.models import Product
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-
     is_paid = models.BooleanField(default=False)
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     @property
     def total_price(self):
@@ -19,4 +18,6 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='Items')
     product = models.ForeignKey(Product, on_delete=models.RESTRICT)
     quantity = models.PositiveBigIntegerField(default=1)
+
+
 

@@ -71,3 +71,5 @@ class Billing(models.Model):
             self.amount -= amount
             self.save()
         return False
+    
+
