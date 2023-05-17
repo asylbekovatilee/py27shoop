@@ -23,8 +23,11 @@ class OrderSerializer(WritableNestedModelSerializer, ModelSerializer):
             item["product"].save()
         return super().create(validated_data)
     
-    def validate(self, items):
+    def validate_items(self, items):
+        # items = items['items']
+        print('ITEMS', items)
         for item in items:
+            # print('ONE ITEM', item)
             if item.get("quantity") > item.get("product").quantity:
                 raise ValidationError("not enough products")
             

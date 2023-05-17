@@ -29,7 +29,7 @@ class ActivateView(APIView):
 class TopUpBillingView(APIView):
     permission_classes = [IsAuthenticated]
 
-    swagger_auto_schema(request_body=BillingSerializer())
+    @swagger_auto_schema(request_body=BillingSerializer())
     def post(self, request):
         {"amount":100}
         amount = request.data.get("amount")
